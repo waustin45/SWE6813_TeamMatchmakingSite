@@ -11,7 +11,7 @@
 - Jordan: 
     - "I updated the page.tsx, global.css,and layout.tsx files to create sections: hero, social proof, features, and call to action. Still some placeholder text but I'll fix it later."
 - Tarik:
-    - "I started the login page but that's about it. I was moving last weekend bu twill get more done this week."
+    - "I started the login page but that's about it. I was moving last weekend but will get more done this week."
 - Devon: 
     - "I have been sketching out how i want the create a user page to look like while touching up on connecting athentication since they go hand in hand."
 - Austin:
