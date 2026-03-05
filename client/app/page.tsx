@@ -1,5 +1,4 @@
 import Image from "next/image";
-import styles from "./page.module.css";
 
 export default function Home() {
   return (
@@ -85,7 +84,7 @@ export default function Home() {
         <h1 className="display-4 fw-bold ">JOIN US</h1>
         <div className="row">
           <div className="col-lg-6 mx-auto">
-            <p className="lead mb-4">and let's build your own personal squad together</p>
+            <p className="lead mb-4">and let us build your own personal squad together</p>
             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
               <button type="button" className="btn btn-primary btn-lg px-4 me-sm-3">Sign Up</button>
               
