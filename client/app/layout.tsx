@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Anta, Inter } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +30,20 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${anta.variable}`}>
         {children}
+      </body>
+    </html>
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className={`${inter.variable} ${anta.variable} d-flex flex-column min-vh-100`}>
+        <Navbar />
+        <main className="flex-grow-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
