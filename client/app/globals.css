@@ -1,28 +1,10 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  color: #2c2c2c;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-inter), sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  
 }
 
 * {
@@ -50,7 +32,7 @@ a {
     #a000c8 70%,
     #d403e1 100%
   );
-  color: white;
+  
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -101,3 +83,24 @@ p {
   opacity: 0.8;
 }
 
+.btn-purple-outline {
+  background: transparent;
+  border: 4px solid black;
+  border-width: 2px !important;
+  color: black;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(212, 3, 225, 0.25);
+}
+
+.btn-white-outline {
+  background: transparent;
+  border: 4px solid black;
+  border-width: 2px !important;
+  color: black;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(212, 3, 225, 0.25);
+}
