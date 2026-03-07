@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -15,7 +15,7 @@ export default function SignupPage() {
       body: JSON.stringify(formData),
     });
 
-    if (res.ok) router.push('/login');
+    if (res.ok) router.push('/auth/login');
     else alert('Registration failed');
   };
 
