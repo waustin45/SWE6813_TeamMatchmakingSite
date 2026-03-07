@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.css";
 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +33,20 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${anta.variable}`}>
         {children}
+      </body>
+    </html>
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className={`${inter.variable} ${anta.variable} d-flex flex-column min-vh-100`}>
+        <Navbar />
+        <main className="flex-grow-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
