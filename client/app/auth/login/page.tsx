@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password }),
     });
 
-    if (res.ok) router.push('/profile');
+    if (res.ok) window.location.href ='/profile';
     else alert('Invalid credentials');
   };
 

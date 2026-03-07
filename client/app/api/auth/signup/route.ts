@@ -1,8 +1,8 @@
 // client/app/api/auth/signup/route.ts
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
-import type { Prisma } from "@/app/generated/prisma/client";
+import { Prisma } from "@/app/generated/prisma";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
 
 
 export async function POST(req: Request) {
@@ -35,6 +35,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
     console.error("signup error", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: "Server error", errorMessage: err instanceof Error &&err?.message }, { status: 500 });
   }
 }

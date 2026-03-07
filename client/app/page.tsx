@@ -49,7 +49,7 @@ export default function Home() {
     </section>
 
       <section>
-        <div className="container px-4" id="icon-grid">
+        <div className="container px-4 " id="icon-grid">
           <h2 className="pb-2 text-center fw-bold">Features</h2>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-5 py-5">
             <div className="col d-flex align-items-start">
