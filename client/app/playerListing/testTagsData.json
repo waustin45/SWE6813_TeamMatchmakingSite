@@ -1,0 +1,7 @@
+[
+  { "id": 101, "label": "Competitive", "color": "red" },
+  { "id": 102, "label": "Casual", "color": "green" },
+  { "id": 103, "label": "Mic Required", "color": "blue" },
+  { "id": 104, "label": "Beginner Friendly", "color": "yellow" },
+  { "id": 105, "label": "Ranked Only", "color": "purple" }
+]
