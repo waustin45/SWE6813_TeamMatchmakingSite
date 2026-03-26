@@ -35,6 +35,29 @@ a {
   
 }
 
+.gradient-purple-btn {
+  background: linear-gradient(
+    135deg,
+    #460071 0%,
+    #6b009c 40%,
+    #a000c8 70%,
+    #d403e1 100%
+  );
+
+  color: white;
+  font-size: 0.85rem;
+  
+}
+
+.card-small-text {
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.card {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-anta), sans-serif;
   letter-spacing: 0.05em;
