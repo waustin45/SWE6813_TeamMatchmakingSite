@@ -21,9 +21,31 @@ model User {
   passwordHash String?   // store bcrypt hash here
   gamerTag    String?   // visible gamer tag
   playStyle    String?
+  bio          String?
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
+
+  games        Game[]    @relation("UserGames")
+  tags         Tag[]     @relation("UserTags")
+}
+
+model Game {
+  id     Int    @id @default(autoincrement())
+  name   String
+  genre  String
+  
+  // Relation back to users
+  users  User[] @relation("UserGames")
+}
+
+model Tag {
+  id     Int    @id @default(autoincrement())
+  label  String
+  color  String
+  
+  // Relation back to users
+  users  User[] @relation("UserTags")
 }
 
 model Account {

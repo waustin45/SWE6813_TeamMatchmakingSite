@@ -1,0 +1,3 @@
+[install]
+# This ensures Bun keeps the npm lockfile in sync
+save-lockfile = true
