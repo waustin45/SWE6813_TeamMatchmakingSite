@@ -18,13 +18,38 @@ model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   name         String?
-  passwordHash String?   // store bcrypt hash here
-  gamerTag    String?   // visible gamer tag
+  passwordHash String?
+  gamerTag    String?
   playStyle    String?
+  bio          String?
+  avatarUrl    String?   // store path like "/avatars/avatar1.png"
+  preferences  Json?
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
+
+  games        Game[]    @relation("UserGames")
+  tags         Tag[]     @relation("UserTags")
 }
+
+model Game {
+  id     Int    @id @default(autoincrement())
+  name   String
+  genre  String
+  
+  // Relation back to users
+  users  User[] @relation("UserGames")
+}
+
+model Tag {
+  id     Int    @id @default(autoincrement())
+  label  String
+  color  String
+  
+  // Relation back to users
+  users  User[] @relation("UserTags")
+}
+
 
 model Account {
   id                 Int     @id @default(autoincrement())

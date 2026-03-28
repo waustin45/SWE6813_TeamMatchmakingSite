@@ -15,6 +15,11 @@ export default function SignupPage() {
       body: JSON.stringify(formData),
     });
 
+    if (res.ok) {
+    // Redirect to preferences page instead of home
+    router.push('/profile/preferences');
+  }
+
     if (res.ok) router.push('/auth/login');
     else alert('Registration failed');
   };

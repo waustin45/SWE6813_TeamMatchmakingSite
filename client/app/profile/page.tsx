@@ -1,15 +1,11 @@
-'use client';
-import signOut from "@/helpers/signOut";
+import ProfileForm from "./ProfileForm";
 
-const page = () => {
+export default function ProfilePage() {
   return (
-    <div className="">
-        <button className="btn btn-primary" >Profile Page</button>
-        <button onClick={() => {
-            signOut()
-            }} className="btn btn-secondary">Sign Out</button>
-    </div>
-  )
+    <main className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
+      <ProfileForm />
+    </main>
+  );
 }
 
-export default page

@@ -18,4 +18,5 @@ Story 5 - 8 points </br>
 Sprint 1 Task Board Link: </br>
 https://austin-howell.atlassian.net/jira/software/projects/WSSS/boards/1?atlOrigin=eyJpIjoiM2UwZTc1Mjg1YTQ1NDEzNjg0YmMxNDFlMDlhOTNmOTUiLCJwIjoiaiJ9 </br>
 Sprint 2 Task Board Link: </br>
+https://austin-howell.atlassian.net/jira/software/projects/WSSS/boards/1/backlog?atlOrigin=eyJpIjoiZWM1NjI5NTQzYzc0NGMwNDhlMTgxMmQzMzMwZTA4NDQiLCJwIjoiaiJ9
 Sprint 3 Task Board Link: </br>
