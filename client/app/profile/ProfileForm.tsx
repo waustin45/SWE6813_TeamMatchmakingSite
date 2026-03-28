@@ -1,52 +1,61 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
-const AVATARS = [
-  '/avatars/avatar1.png',
-  '/avatars/avatar2.png',
-];
+const AVATARS = ["/avatars/avatar1.png", "/avatars/avatar2.png"];
 
 // Replace localToken() with your auth token retrieval s
 function localToken() {
   // Example: return localStorage.getItem('token') || '';
-  return '';
+  return "";
 }
 
 export default function ProfileForm() {
-  const [bio, setBio] = useState('');
+  const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [prefs, setPrefs] = useState({ voiceChat: false });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetch('/api/profile', { headers: { Authorization: 'Bearer ' + localToken() } })
-      .then(r => r.json())
-      .then(data => {
-        if (data?.user) {
-          setBio(data.user.bio ?? '');
-          setAvatarUrl(data.user.avatarUrl ?? null);
-          setPrefs(data.user.preferences ?? { voiceChat: false });
-        }
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch("/api/auth/profile", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${localToken()}` },
       });
-  }, []);
+
+      const data = await response.json();
+
+      if (data?.user) {
+        setBio(data.user.bio ?? "");
+        setAvatarUrl(data.user.avatarUrl ?? null);
+        setPrefs(data.user.preferences ?? { voiceChat: false });
+      }
+    } catch (error) {
+      console.error("Failed to load profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchProfile();
+  }, []); // Empty array means "run once on mount"
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/profile', {
-        method: 'PUT',
+      const res = await fetch("/api/auth/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localToken()
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localToken(),
         },
-        body: JSON.stringify({ bio, avatarUrl, preferences: prefs })
+        body: JSON.stringify({ bio, avatarUrl, preferences: prefs }),
       });
-      if (!res.ok) throw new Error('Save failed');
-      alert('Profile saved');
+      if (!res.ok) throw new Error("Save failed");
+      alert("Profile saved");
     } catch (err) {
       console.error(err);
-      alert('Save failed');
+      alert("Save failed");
     } finally {
       setLoading(false);
     }
@@ -62,9 +71,14 @@ export default function ProfileForm() {
               key={a}
               type="button"
               onClick={() => setAvatarUrl(a)}
-              className={`border rounded p-1 ${avatarUrl === a ? 'ring-2 ring-blue-500' : ''}`}
+              className={`border rounded p-1 ${avatarUrl === a ? "ring-2 ring-blue-500" : ""}`}
             >
-              <img src={a} alt="avatar" className="w-20 h-20 object-cover rounded-full" />
+              <img
+                src={a}
+                alt="avatar"
+                className=" object-cover rounded-full"
+                style={{ width: "100px", height: "100px" }}
+              />
             </button>
           ))}
         </div>
@@ -73,26 +87,47 @@ export default function ProfileForm() {
       <div>
         <label className="block font-medium">Preview</label>
         <div className="mt-2">
-          <img src={avatarUrl ?? '/avatars/avatar1.png'} alt="preview" className="w-24 h-24 rounded-full object-cover" />
+          <img
+            src={avatarUrl ?? "/avatars/avatar1.png"}
+            alt="preview"
+            className=" rounded-full object-cover"
+            style={{ width: "150px", height: "150px" }}
+          />
         </div>
       </div>
 
-      <div>
+      <div className="d-flex flex-column">
         <label className="block font-medium">Bio</label>
-        <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full border p-2" />
+        <textarea
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          rows={4}
+          className="w-full border p-2 bg-white text-dark"
+        />
       </div>
 
-      <div>
-        <label className="block font-medium">Preferences</label>
-        <label className="flex items-center gap-2 mt-2">
-          <input type="checkbox" checked={prefs.voiceChat} onChange={e => setPrefs({ ...prefs, voiceChat: e.target.checked })} />
+      <div className="d-flex flex-column">
+        <label className="block font-medium">Preferences:</label>
+        <label className="d-flex items-center gap-2 mt-2">
+          <input
+            className="bg-white text-dark"
+            type="checkbox"
+            checked={prefs.voiceChat}
+            onChange={(e) =>
+              setPrefs({ ...prefs, voiceChat: e.target.checked })
+            }
+          />
           Voice chat
         </label>
       </div>
 
       <div>
-        <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded">
-          {loading ? 'Saving...' : 'Save profile'}
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 btn-primary  btn "
+        >
+          {loading ? "Saving..." : "Save profile"}
         </button>
       </div>
     </form>

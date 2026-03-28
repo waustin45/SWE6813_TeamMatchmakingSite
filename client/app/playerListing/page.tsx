@@ -1,4 +1,5 @@
 
+import UserDataInterface from '@/interfaces/userDataInterface';
 import PlayerListing from '../components/PlayerListing';
 import { getAllGames } from '../serverActions/playerListingPage/getGames';
 import { getAllPlayers } from '../serverActions/playerListingPage/getPlayers';
@@ -15,11 +16,13 @@ const page = async () => {
   const games = gamesRet.data;
   const tags = tagsRet.data;
 
+  if(!players || !games || !tags) return <>Error Loading</>
+
 
   
   return (
     <main className="m-4">
-      <PlayerListing players={players} games={games} tags={tags} />
+      <PlayerListing players={players! as UserDataInterface[]} games={games} tags={tags} />
     </main>
   )
 }

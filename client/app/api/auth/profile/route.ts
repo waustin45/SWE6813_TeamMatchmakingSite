@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const userId = Number(payload.sub);
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, email: true, name: true, gamerTag: true, bio: true, avatarUrl: true, preferences: true }
+    select: { id: true, email: true, name: true, gamerTag: true, bio: true, avatarUrl: true, preferences: true, playStyle: true }
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 

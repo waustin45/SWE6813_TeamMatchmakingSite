@@ -1,7 +1,11 @@
 "use client";
+import GameDataInterface from "@/interfaces/gameDataInterface";
+import TagDataInterface from "@/interfaces/tagDataInterface";
+import UserDataInterface from "@/interfaces/userDataInterface";
+import Link from "next/link";
 import { useState } from "react";
 
-const PlayerListing = ({ players, games, tags }) => {
+const PlayerListing = ({ players, games, tags } : { players: UserDataInterface[], games: GameDataInterface[], tags: TagDataInterface[]}) => {
   // 1. Setup state for filters
   const [playerState, setPlayerState] = useState(players);
   const [searchTerm, setSearchTerm] = useState("");
@@ -107,7 +111,7 @@ const PlayerListing = ({ players, games, tags }) => {
 
                   <div className="card-footer bg-transparent border-top-0 pb-3">
                     <div className="d-grid gap-2">
-                      <button className="btn btn-primary">Request Match</button>
+                      <button className="btn btn-primary"><Link href={`/player/request/${player.id}`}>Request Match</Link></button>
                     </div>
                   </div>
                 </div>

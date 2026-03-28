@@ -1,4 +1,4 @@
-import ProfileForm from '../api/auth/profile/ProfileForm';
+import ProfileForm from "./ProfileForm";
 
 export default function ProfilePage() {
   return (

@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Profile } from '@/app/components/Navbar';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function PreferencesPage() {
+export default function PreferenceForm() {
   const [formData, setFormData] = useState<Partial<Profile>>({
     name: '',
     gamerTag: '',
@@ -18,6 +18,7 @@ export default function PreferencesPage() {
       const res = await fetch('/api/auth/profile');
       if (res.ok) {
         const data = await res.json();
+        console.log(data.user)
         setFormData(data.user);
       }
       setLoading(false);

@@ -29,6 +29,9 @@ export default function Navbar() {
               <Link href="/profile" className="btn btn-outline-light rounded-pill px-4">
                 Profile
               </Link>
+              <Link href="/playerListing" className="btn btn-outline-light rounded-pill px-4">
+                Find Players
+              </Link>
             </div>
           ) 
         }

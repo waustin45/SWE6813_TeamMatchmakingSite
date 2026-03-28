@@ -1,7 +1,0 @@
-[
-  { "id": 1, "name": "Counter-Strike 2", "genre": "FPS" },
-  { "id": 2, "name": "Minecraft", "genre": "Sandbox" },
-  { "id": 3, "name": "League of Legends", "genre": "MOBA" },
-  { "id": 4, "name": "Stardew Valley", "genre": "Simulation" },
-  { "id": 5, "name": "Valorant", "genre": "FPS" }
-]
