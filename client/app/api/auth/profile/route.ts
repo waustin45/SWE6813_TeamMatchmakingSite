@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { getTokenFromRequest, verifyAuthToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const token = getTokenFromRequest(req);
@@ -41,6 +41,31 @@ export async function PUT(req: Request) {
   } catch (err) {
     console.error("Profile update error", err);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  const token = getTokenFromRequest(req);
+  const payload = verifyAuthToken(token);
+
+  if (!payload) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const userId = Number(payload.sub);
+  const body = await req.json();
+  const { name, gamerTag, playStyle } = body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { name, gamerTag, playStyle },
+      select: { id: true, email: true, name: true, gamerTag: true, playStyle: true }
+    });
+
+    return NextResponse.json({ user: updatedUser });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to update preferences" }, { status: 500 });
   }
 }
 
