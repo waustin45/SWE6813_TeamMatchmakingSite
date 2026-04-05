@@ -27,9 +27,45 @@ model User {
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
+  messages     Message[]
+  invites      Invite[]
+  messageInstances MessageInstance[]
 
   games        Game[]    @relation("UserGames")
   tags         Tag[]     @relation("UserTags")
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  content String
+  sentAt DateTime @default(now())
+  senderId Int
+  receiverId Int
+  isRead Boolean @default(false)
+  instanceId Int
+
+  instance MessageInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+model MessageInstance {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  senderId Int
+  receiverId Int
+  messages Message[]
+
+  user User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Invite {
+  id Int @id @default(autoincrement())
+  content String
+  sentAt DateTime @default(now())
+  senderId Int
+  receiverId Int
+
+  user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
 }
 
 model Game {
