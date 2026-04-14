@@ -19,35 +19,14 @@ model User {
   email        String    @unique
   name         String?
   passwordHash String?
-  gamerTag    String?
+  gamerTag     String?
   playStyle    String?
   bio          String?
-  avatarUrl    String?   // store path like "/avatars/avatar1.png"
+  avatarUrl    String?   
   preferences  Json?
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
-
-  games        Game[]    @relation("UserGames")
-  tags         Tag[]     @relation("UserTags")
-}
-
-model Game {
-  id     Int    @id @default(autoincrement())
-  name   String
-  genre  String
-  
-  // Relation back to users
-  users  User[] @relation("UserGames")
-}
-
-model Tag {
-  id     Int    @id @default(autoincrement())
-  label  String
-  color  String
-  
-  // Relation back to users
-  users  User[] @relation("UserTags")
 }
 
 
@@ -85,4 +64,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Invite {
+  id          Int      @id @default(autoincrement())
+  sender      User     @relation("InvitesSent", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation("InvitesReceived", fields: [recipientId], references: [id])
+  recipientId Int
+  message     Message? @relation(fields: [messageId], references: [id])
+  messageId   Int?
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  content     String
+  sender      User     @relation("MessagesSent", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation("MessagesReceived", fields: [recipientId], references: [id])
+  recipientId Int
+  invite      Invite?  @relation(fields: [inviteId], references: [id])
+  inviteId    Int?
+  createdAt   DateTime @default(now())
 }
