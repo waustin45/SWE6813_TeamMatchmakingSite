@@ -15,10 +15,9 @@ export type OtherUser = {
 export type MessageData = {
   id: number;
   content: string;
-  sentAt: Date;
+  createdAt: Date;
   senderId: number;
-  receiverId: number;
-  isRead: boolean;
+  recipientId: number;
   instanceId: number;
 };
 
@@ -52,7 +51,7 @@ export async function getMessageInstances(): Promise<{
       OR: [{ senderId: userId }, { receiverId: userId }],
     },
     include: {
-      messages: { orderBy: { sentAt: "asc" } },
+      messages: { orderBy: { createdAt: "asc" } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -99,12 +98,28 @@ export async function sendMessage(instanceId: number, content: string) {
     return { error: "Forbidden" };
   }
 
-  const receiverId =
+  const recipientId =
     instance.senderId === userId ? instance.receiverId : instance.senderId;
 
   const message = await prisma.message.create({
-    data: { content, senderId: userId, receiverId, instanceId },
+    data: { content, senderId: userId, recipientId, instanceId },
   });
 
   return { success: true, message };
+}
+
+export async function startConversation(recipientId: number, content: string) {
+  const userId = await getCurrentUserId();
+  if (!userId) return { error: "Unauthorized" };
+  if (!content.trim()) return { error: "Message cannot be empty" };
+
+  const instance = await prisma.messageInstance.create({
+    data: { senderId: userId, receiverId: recipientId },
+  });
+
+  const message = await prisma.message.create({
+    data: { content, senderId: userId, recipientId, instanceId: instance.id },
+  });
+
+  return { success: true, instanceId: instance.id, message };
 }

@@ -1,5 +1,6 @@
 
 import UserDataInterface from '@/interfaces/userDataInterface';
+import Link from 'next/link';
 import PlayerListing from '../components/PlayerListing';
 import { getAllGames } from '../serverActions/playerListingPage/getGames';
 import { getAllPlayers } from '../serverActions/playerListingPage/getPlayers';
@@ -22,6 +23,9 @@ const page = async () => {
   
   return (
     <main className="m-4">
+      <div className='d-flex justify-content-end w-100'>
+        <Link className='btn btn-secondary shadow' href={'/match-feed'}>Find Players that match your style</Link>
+      </div>
       <PlayerListing players={players! as UserDataInterface[]} games={games} tags={tags} />
     </main>
   )

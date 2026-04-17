@@ -14,6 +14,7 @@ datasource db {
 }
 
 
+
 model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
@@ -27,8 +28,10 @@ model User {
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
-  messages     Message[]
-  invites      Invite[]
+  messagesSent     Message[] @relation("MessagesSent")
+  messagesReceived Message[] @relation("MessagesReceived")
+  invitesSent      Invite[]  @relation("InvitesSent")
+  invitesReceived  Invite[]  @relation("InvitesReceived")
   messageInstances MessageInstance[]
 
   games        Game[]    @relation("UserGames")
@@ -54,6 +57,7 @@ model MessageInstance {
   senderId Int
   receiverId Int
   messages Message[]
+  invites  Invite[]
 
   user User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
@@ -69,20 +73,25 @@ model MessageInstance {
 // }
 
 model Game {
-  id     Int    @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   name   String
-  genre  String
-  
-  // Relation back to users
-  users  User[] @relation("UserGames")
+  genres Genre[] @relation("GameGenres")
+  tags   Tag[]   @relation("GameTags")
+  users  User[]  @relation("UserGames")
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String
+  color String
+  games Game[] @relation("GameGenres")
 }
 
 model Tag {
   id     Int    @id @default(autoincrement())
   label  String
   color  String
-  
-  // Relation back to users
+  games  Game[] @relation("GameTags")
   users  User[] @relation("UserTags")
 }
 
@@ -129,9 +138,9 @@ model Invite {
   senderId    Int
   recipient   User     @relation("InvitesReceived", fields: [recipientId], references: [id])
   recipientId Int
-  message     Message? @relation(fields: [messageId], references: [id])
-  messageId   Int?
-  status      String   @default("pending")
+  messageInstance   MessageInstance? @relation(fields: [messageInstanceId], references: [id])
+  messageInstanceId Int?
+  status            String          @default("pending")
   createdAt   DateTime @default(now())
 
   sender      User     @relation("InvitesSent", fields: [senderId], references: [id])
@@ -144,11 +153,8 @@ model Message {
   senderId    Int
   recipient   User     @relation("MessagesReceived", fields: [recipientId], references: [id])
   recipientId Int
-  invite      Invite?  @relation(fields: [inviteId], references: [id])
-  inviteId    Int?
   createdAt   DateTime @default(now())
   instanceId Int
 
   instance MessageInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [recipientId], references: [id], onDelete: Cascade)
 }

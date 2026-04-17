@@ -1,8 +1,22 @@
+'use client'
+import { startConversation } from "@/app/messages/actions";
 import UserDataInterface from "@/interfaces/userDataInterface";
 import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
 
 export default function MatchInvite({ userData }: { userData: UserDataInterface }) {
+    const [message, setMessage] = useState("")
+    const [error, setError] = useState<string | null>(null)
+
+    async function sendMessage() {
+        const result = await startConversation(userData.id, message)
+        if ("error" in result) {
+            setError(result.error)
+        } else {
+            setMessage("")
+            setError(null)
+        }
+    }
     return (
         <main className="min-vh-100 d-flex align-items-center justify-content-center">
             <div className="text-center">
@@ -13,7 +27,7 @@ export default function MatchInvite({ userData }: { userData: UserDataInterface 
 
                     <div className="d-flex justify-content-center py-3 ">
                         <div className="card" style={{ width: "20rem" }}>
-                            <Image src="/female_profile.jpg" alt="Matched player card" width={150} height={290} className="card-img-top" />
+                            <Image src={userData.avatarUrl ? userData.avatarUrl : "/female_profile.jpg"} alt="Matched player card" width={150} height={290} className="card-img-top" />
                             <div className="card-body">
                                 <h5 className="card-title">{userData.gamerTag}</h5>
                                 <p>Atlanta, GA</p>
@@ -27,11 +41,12 @@ export default function MatchInvite({ userData }: { userData: UserDataInterface 
                                     </div>
                                 </div>
 
-                                <textarea className="form-control mt-3" rows={3} placeholder="Type your message here..."></textarea>
+                                <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="form-control mt-3" rows={3} placeholder="Type your message here..."></textarea>
+                                {error && <p className="text-danger mt-2">{error}</p>}
                                 <div className="d-flex justify-content-center gap-2 mt-3">
                                     
-                                <Link href="/profile" className="btn btn-lg px-4 gradient-purple-btn">Accept Invite</Link>
-                                <Link href="/profile" className="btn btn-lg px-4 gradient-purple-btn">Send Message</Link>
+                                {/* <Link href="/profile" className="btn btn-lg px-4 gradient-purple-btn">Accept Invite</Link> */}
+                                <button onClick={sendMessage} className="btn btn-lg px-4 gradient-purple-btn w-100">Send Message</button>
                                 </div>
                                 
                             </div>
