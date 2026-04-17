@@ -25,7 +25,7 @@ describe('getAllPlayers', () => {
 
     expect(prisma.user.findMany).toHaveBeenCalledWith({
       include: {
-        games: true,
+        games: { include: { genres: true } },
         tags: true,
       },
       orderBy: {
