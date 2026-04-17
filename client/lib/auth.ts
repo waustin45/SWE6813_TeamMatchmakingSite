@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import prisma from "./prisma"; 
 
 const COOKIE_NAME = "tm_auth"; // team-matchmaking auth cookie
 
@@ -30,4 +31,25 @@ export function getTokenFromRequest(req: Request) {
   const match = cookieHeader.split(";").map(s => s.trim()).find(s => s.startsWith(`${COOKIE_NAME}=`));
   if (!match) return null;
   return match.split("=")[1] ?? null;
+}
+
+export async function getUserFromSession(req: Request) {
+  const token = getTokenFromRequest(req);
+  const payload = verifyAuthToken(token);
+  if (!payload || !payload.sub) return null;
+
+  const userId = Number(payload.sub);
+  if (Number.isNaN(userId)) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      avatarUrl: true,
+      gamerTag: true,
+    },
+  });
+  return user ?? null;
 }
