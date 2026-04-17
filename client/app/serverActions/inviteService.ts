@@ -29,21 +29,27 @@ export async function createInviteService({ req, recipientId, content }: CreateI
   });
   if (existing) throw new Error("PENDING_INVITE_EXISTS");
 
-  // Create invite and nested message atomically
+  const instance = await prisma.messageInstance.create({
+    data: { senderId: user.id, receiverId: recipientIdNum },
+  });
+
+  await prisma.message.create({
+    data: {
+      content: content.trim(),
+      senderId: user.id,
+      recipientId: recipientIdNum,
+      instanceId: instance.id,
+    },
+  });
+
   const invite = await prisma.invite.create({
     data: {
       sender: { connect: { id: user.id } },
       recipient: { connect: { id: recipientIdNum } },
       status: "pending",
-      message: {
-        create: {
-          content: content.trim(),
-          sender: { connect: { id: user.id } },
-          recipient: { connect: { id: recipientIdNum } },
-        },
-      },
+      messageInstance: { connect: { id: instance.id } },
     },
-    include: { message: true },
+    include: { messageInstance: true },
   });
 
   return invite;

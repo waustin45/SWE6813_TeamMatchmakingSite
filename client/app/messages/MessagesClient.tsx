@@ -50,13 +50,14 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
 
     // Optimistic update
     const optimisticMsg: MessageData = {
-      id: Date.now(),
+      id: 0,
       content: trimmed,
-      sentAt: new Date(),
+      //sentAt: new Date(),
       senderId: currentUserId,
-      receiverId: selectedInstance!.otherUser.id,
-      isRead: false,
+      recipientId: selectedInstance!.otherUser.id,
+      //isRead: false,
       instanceId: selectedId,
+      createdAt: new Date()
     };
 
     setLocalInstances((prev) =>
@@ -112,7 +113,7 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
             localInstances.map((inst) => {
               const lastMsg = inst.messages[inst.messages.length - 1];
               const unread = inst.messages.filter(
-                (m) => m.senderId !== currentUserId && !m.isRead
+                (m) => m.senderId !== currentUserId
               ).length;
               const isSelected = inst.id === selectedId;
 
@@ -170,7 +171,7 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
                       </span>
                       {lastMsg && (
                         <span style={{ fontSize: "0.72rem", color: "#9ca3af" }}>
-                          {formatTime(lastMsg.sentAt)}
+                          {formatTime(lastMsg.createdAt)}
                         </span>
                       )}
                     </div>
@@ -292,7 +293,7 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
                   >
                     {!isMine && (
                       <span style={{ fontSize: "0.72rem", color: "#9ca3af", marginBottom: "2px", marginLeft: "4px" }}>
-                        {getDisplayName(selectedInstance.otherUser)}, {formatTime(msg.sentAt)}
+                        {getDisplayName(selectedInstance.otherUser)}, {formatTime(msg.createdAt)}
                       </span>
                     )}
                     <div
@@ -312,7 +313,7 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
                     </div>
                     {isMine && (
                       <span style={{ fontSize: "0.72rem", color: "#9ca3af", marginTop: "2px", marginRight: "4px" }}>
-                        {formatTime(msg.sentAt)}
+                        {formatTime(msg.createdAt)}
                       </span>
                     )}
                   </div>

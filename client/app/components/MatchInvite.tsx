@@ -11,7 +11,7 @@ export default function MatchInvite({ userData }: { userData: UserDataInterface 
     async function sendMessage() {
         const result = await startConversation(userData.id, message)
         if ("error" in result) {
-            setError(result.error)
+            setError(result.error ?? "Something went wrong")
         } else {
             setMessage("")
             setError(null)

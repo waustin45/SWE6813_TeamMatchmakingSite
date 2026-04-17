@@ -5,6 +5,8 @@ import PlayerListing from '../components/PlayerListing';
 import { getAllGames } from '../serverActions/playerListingPage/getGames';
 import { getAllPlayers } from '../serverActions/playerListingPage/getPlayers';
 import { getAllTags } from '../serverActions/playerListingPage/getTags';
+
+
 const page = async () => {
   const playersRet = await getAllPlayers()
   const gamesRet = await getAllGames()
