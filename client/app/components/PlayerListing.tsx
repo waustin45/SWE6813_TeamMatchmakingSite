@@ -111,7 +111,7 @@ const PlayerListing = ({ players, games, tags } : { players: UserDataInterface[]
 
                   <div className="card-footer bg-transparent border-top-0 pb-3">
                     <div className="d-grid gap-2">
-                      <button className="btn btn-primary"><Link href={`/player/request/${player.id}`}>Request Match</Link></button>
+                      <button className="btn btn-primary"><Link href={`/player/request/${player.id}`}>View</Link></button>
                     </div>
                   </div>
                 </div>

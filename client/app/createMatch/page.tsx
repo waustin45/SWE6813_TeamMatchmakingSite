@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { getAllGames } from '@/app/serverActions/playerListingPage/getGames';
 import { getAllTags } from '@/app/serverActions/playerListingPage/getTags';
 import GameDataInterface from '@/interfaces/gameDataInterface';
 import TagDataInterface from '@/interfaces/tagDataInterface';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { createMatch } from './actions';
 
 export default function CreateMatchPage() {
   const [games, setGames] = useState<GameDataInterface[]>([]);
@@ -14,9 +15,11 @@ export default function CreateMatchPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    selectedGameId: '',
-    selectedTagIds: [] as number[],
+    gameId: 0,
+    tagIds: [] as number[],
   });
+  const [loadingPost, setLoadingPost] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
   
   const router = useRouter();
 
@@ -38,6 +41,24 @@ export default function CreateMatchPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Creating match:", formData);
+    setLoadingPost(true)
+    setUploadSuccess(false)
+    try{
+      const createMatchRes = await createMatch(formData)
+      if (createMatchRes.success) {
+        setUploadSuccess(true)
+        setLoadingPost(false)
+      } else {
+        alert("Unable to post match. Please try again.")
+        setLoadingPost(false)
+      }
+    } catch(ex){
+      setLoadingPost(false)
+      alert("Unable to post match. Please try again.")
+      console.log(ex)
+    }
+
+
   };
 
   if (loading) return <div className="container p-5 text-center">Loading...</div>;
@@ -65,7 +86,7 @@ export default function CreateMatchPage() {
           <select 
             className="form-select" 
             required 
-            onChange={(e) => setFormData({...formData, selectedGameId: e.target.value})}
+            onChange={(e) => setFormData({...formData, gameId: parseInt(e.target.value)})}
           >
             <option value="">Choose a game...</option>
             {games.map((game) => (
@@ -86,9 +107,9 @@ export default function CreateMatchPage() {
                   id={`tag-${tag.id}`}
                   onChange={(e) => {
                     const newTags = e.target.checked 
-                      ? [...formData.selectedTagIds, tag.id]
-                      : formData.selectedTagIds.filter(id => id !== tag.id);
-                    setFormData({...formData, selectedTagIds: newTags});
+                      ? [...formData.tagIds, tag.id]
+                      : formData.tagIds.filter(id => id !== tag.id);
+                    setFormData({...formData, tagIds: newTags});
                   }}
                 />
                 <label className={`form-check-label badge bg-${tag.color}`} htmlFor={`tag-${tag.id}`}>
@@ -110,8 +131,16 @@ export default function CreateMatchPage() {
           ></textarea>
         </div>
 
-        <button type="submit" className="btn btn-primary gradient-purple w-100 border-0">
-          Post Open Match
+        <button type="submit" disabled={loadingPost || uploadSuccess} className="btn btn-primary gradient-purple w-100 border-0">
+          {
+            loadingPost && <span className="spinner-border spinner-border-sm me-2"></span>
+          }
+          {
+            uploadSuccess && <span className="">Match Posted!</span>
+          }
+          {
+            !loadingPost && !uploadSuccess && <span>Post Open Match</span>
+          }
         </button>
       </form>
     </div>

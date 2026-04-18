@@ -2,6 +2,7 @@
 import checkUser from '@/helpers/checkUser';
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 export interface Profile {
   email: string | null;
@@ -11,10 +12,17 @@ export interface Profile {
 }
 export default function Navbar() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
-    
-    checkUser(setProfile)
-  },[]);
+    checkUser(setProfile);
+  }, []);
+
+  function handleSignOut() {
+    document.cookie = 'tm_auth=; Max-Age=0; path=/';
+    setProfile(null);
+    router.push('/');
+  }
 
   
   return (
@@ -26,16 +34,22 @@ export default function Navbar() {
         {
           profile?.email && (
             <div className="d-flex align-items-center gap-3">
-              <span className="text-light">Welcome, {profile.gamerTag || profile.name || profile.email}</span>
+              {/* <span className="text-light">Welcome, {profile.gamerTag || profile.name || profile.email}</span> */}
               <Link href="/profile" className="btn btn-outline-light rounded-pill px-4">
                 Profile
               </Link>
               <Link href="/playerListing" className="btn btn-outline-light rounded-pill px-4">
                 Find Players
               </Link>
+              <Link href="/openMatches" className="btn btn-outline-light rounded-pill px-4">
+                Open Matches
+              </Link>
               <Link href="/messages" className='btn btn-outline-light rounded-pill px-4'>
                 <MessageCircle />
               </Link>
+              <button onClick={handleSignOut} className='btn btn-outline-light rounded-pill px-4'>
+                Sign Out
+              </button>
             </div>
           ) 
         }

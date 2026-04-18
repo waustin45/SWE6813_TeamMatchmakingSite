@@ -36,20 +36,11 @@ model User {
 
   games        Game[]    @relation("UserGames")
   tags         Tag[]     @relation("UserTags")
+
+  matchesOwned    Match[]       @relation("MatchesOwned")
+  matchMemberships MatchMember[] @relation("MatchMemberships")
 }
 
-// model Message {
-//   id Int @id @default(autoincrement())
-//   content String
-//   sentAt DateTime @default(now())
-//   senderId Int
-//   receiverId Int
-//   isRead Boolean @default(false)
-//   instanceId Int
-
-//   instance MessageInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
-//   user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
-// }
 
 model MessageInstance {
   id Int @id @default(autoincrement())
@@ -62,22 +53,14 @@ model MessageInstance {
   user User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
-// model Invite {
-//   id Int @id @default(autoincrement())
-//   content String
-//   sentAt DateTime @default(now())
-//   senderId Int
-//   receiverId Int
-
-//   user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
-// }
 
 model Game {
-  id     Int     @id @default(autoincrement())
-  name   String
-  genres Genre[] @relation("GameGenres")
-  tags   Tag[]   @relation("GameTags")
-  users  User[]  @relation("UserGames")
+  id      Int     @id @default(autoincrement())
+  name    String
+  genres  Genre[] @relation("GameGenres")
+  tags    Tag[]   @relation("GameTags")
+  users   User[]  @relation("UserGames")
+  matches Match[]
 }
 
 model Genre {
@@ -88,11 +71,43 @@ model Genre {
 }
 
 model Tag {
-  id     Int    @id @default(autoincrement())
-  label  String
-  color  String
-  games  Game[] @relation("GameTags")
-  users  User[] @relation("UserTags")
+  id      Int     @id @default(autoincrement())
+  label   String
+  color   String
+  games   Game[]  @relation("GameTags")
+  users   User[]  @relation("UserTags")
+  matches Match[] @relation("MatchTags")
+}
+
+model Match {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String?
+  status      String        @default("open")
+  createdAt   DateTime      @default(now())
+
+  ownerId     Int
+  owner       User          @relation("MatchesOwned", fields: [ownerId], references: [id])
+
+  gameId      Int
+  game        Game          @relation(fields: [gameId], references: [id])
+
+  tags        Tag[]         @relation("MatchTags")
+  members     MatchMember[]
+}
+
+model MatchMember {
+  id       Int      @id @default(autoincrement())
+  joinedAt DateTime @default(now())
+  status   String   @default("joined")
+
+  matchId  Int
+  match    Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  userId   Int
+  user     User     @relation("MatchMemberships", fields: [userId], references: [id])
+
+  @@unique([matchId, userId])
 }
 
 

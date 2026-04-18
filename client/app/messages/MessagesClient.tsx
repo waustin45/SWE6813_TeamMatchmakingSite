@@ -34,9 +34,14 @@ export default function MessagesClient({ instances, currentUserId }: Props) {
 
   const selectedInstance = localInstances.find((i) => i.id === selectedId) ?? null;
 
+  const prevSelectedIdRef = useRef<number | null>(null);
+
   useEffect(() => {
+    const switchedConversation = prevSelectedIdRef.current !== selectedId;
+    prevSelectedIdRef.current = selectedId;
+    if (switchedConversation) return;
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedInstance?.messages.length]);
+  }, [selectedInstance?.messages.length, selectedId]);
 
   function handleSelect(id: number) {
     setSelectedId(id);
