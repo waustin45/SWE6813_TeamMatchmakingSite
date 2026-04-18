@@ -31,7 +31,7 @@ describe('getUserData', () => {
     expect(prisma.user.findUnique).toHaveBeenCalledWith({
       where: { id: 1 },
       include: {
-        games: true,
+        games: { include: { genres: true } },
         tags: true,
       },
     });
@@ -44,6 +44,6 @@ describe('getUserData', () => {
     const result = await getUserData(1);
 
     expect(console.error).toHaveBeenCalledWith('Failed to fetch player:', expect.any(Error));
-    expect(result).toEqual({ success: false, error: 'Internal Server Error' });
+    expect(result).toEqual({ success: false, error: 'Internal Server Error', data: null });
   });
 });

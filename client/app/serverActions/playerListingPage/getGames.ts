@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function getAllGames() {
     try{
-        const games = await prisma.game.findMany();
+        const games = await prisma.game.findMany({ include: { genres: true } });
         //console.log(games);
         return { success: true, data: games };
     } catch(error){

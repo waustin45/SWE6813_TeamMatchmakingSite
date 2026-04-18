@@ -14,39 +14,84 @@ datasource db {
 }
 
 
+
 model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique
   name         String?
   passwordHash String?
-  gamerTag    String?
+  gamerTag     String?
   playStyle    String?
   bio          String?
-  avatarUrl    String?   // store path like "/avatars/avatar1.png"
+  avatarUrl    String?   
   preferences  Json?
   createdAt    DateTime  @default(now())
   accounts     Account[]
   sessions     Session[]
+  messagesSent     Message[] @relation("MessagesSent")
+  messagesReceived Message[] @relation("MessagesReceived")
+  invitesSent      Invite[]  @relation("InvitesSent")
+  invitesReceived  Invite[]  @relation("InvitesReceived")
+  messageInstances MessageInstance[]
 
   games        Game[]    @relation("UserGames")
   tags         Tag[]     @relation("UserTags")
 }
 
+// model Message {
+//   id Int @id @default(autoincrement())
+//   content String
+//   sentAt DateTime @default(now())
+//   senderId Int
+//   receiverId Int
+//   isRead Boolean @default(false)
+//   instanceId Int
+
+//   instance MessageInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+//   user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+// }
+
+model MessageInstance {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  senderId Int
+  receiverId Int
+  messages Message[]
+  invites  Invite[]
+
+  user User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+// model Invite {
+//   id Int @id @default(autoincrement())
+//   content String
+//   sentAt DateTime @default(now())
+//   senderId Int
+//   receiverId Int
+
+//   user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+// }
+
 model Game {
-  id     Int    @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   name   String
-  genre  String
-  
-  // Relation back to users
-  users  User[] @relation("UserGames")
+  genres Genre[] @relation("GameGenres")
+  tags   Tag[]   @relation("GameTags")
+  users  User[]  @relation("UserGames")
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String
+  color String
+  games Game[] @relation("GameGenres")
 }
 
 model Tag {
   id     Int    @id @default(autoincrement())
   label  String
   color  String
-  
-  // Relation back to users
+  games  Game[] @relation("GameTags")
   users  User[] @relation("UserTags")
 }
 
@@ -85,4 +130,31 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Invite {
+  id          Int      @id @default(autoincrement())
+  
+  senderId    Int
+  recipient   User     @relation("InvitesReceived", fields: [recipientId], references: [id])
+  recipientId Int
+  messageInstance   MessageInstance? @relation(fields: [messageInstanceId], references: [id])
+  messageInstanceId Int?
+  status            String          @default("pending")
+  createdAt   DateTime @default(now())
+
+  sender      User     @relation("InvitesSent", fields: [senderId], references: [id])
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  content     String
+  sender      User     @relation("MessagesSent", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation("MessagesReceived", fields: [recipientId], references: [id])
+  recipientId Int
+  createdAt   DateTime @default(now())
+  instanceId Int
+
+  instance MessageInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
 }

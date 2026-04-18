@@ -27,40 +27,69 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Cleanup: Deleting old data...");
+  await prisma.message.deleteMany();
+  await prisma.invite.deleteMany();
+  await prisma.messageInstance.deleteMany();
   await prisma.user.deleteMany();
   await prisma.game.deleteMany();
+  await prisma.genre.deleteMany();
   await prisma.tag.deleteMany();
 
-  // 1. Create Tags
-const tagsData = [
-  { label: "Competitive", color: "danger" },   // Red
-  { label: "Casual", color: "success" },       // Green
-  { label: "Mic Required", color: "primary" },   // Blue
-  { label: "Beginner Friendly", color: "warning" }, // Yellow
-  { label: "Ranked Only", color: "info" },      // Light Blue/Purple-ish
-  { label: "Pro", color: "dark" },             // Black/Dark Gray
-];
+  // 1. Create Genres
+  const genresData = [
+    { name: "FPS",          color: "danger" },
+    { name: "MOBA",         color: "primary" },
+    { name: "Sandbox",      color: "success" },
+    { name: "Simulation",   color: "info" },
+    { name: "Battle Royale",color: "warning" },
+    { name: "Hero Shooter", color: "secondary" },
+    { name: "RPG",          color: "dark" },
+    { name: "Sports",       color: "success" },
+  ];
+
+  const genres = await Promise.all(
+    genresData.map((g) => prisma.genre.create({ data: g }))
+  );
+
+  const genreMap = new Map(genres.map((g) => [g.name, g.id]));
+
+  // 2. Create Tags
+  const tagsData = [
+    { label: "Competitive",       color: "danger" },
+    { label: "Casual",            color: "success" },
+    { label: "Mic Required",      color: "primary" },
+    { label: "Beginner Friendly", color: "warning" },
+    { label: "Ranked Only",       color: "info" },
+    { label: "Pro",               color: "dark" },
+  ];
 
   const tags = await Promise.all(
     tagsData.map((tag) => prisma.tag.create({ data: tag }))
   );
 
-  // 2. Create Games
+  // 3. Create Games (connect to Genre relation)
   const gamesData = [
-    {id:1, name: "Counter-Strike 2", genre: "FPS" },
-    {id:2, name: "Minecraft", genre: "Sandbox" },
-    {id:3, name: "League of Legends", genre: "MOBA" },
-    {id:4, name: "Stardew Valley", genre: "Simulation" },
-    {id:5, name: "Valorant", genre: "FPS" },
-    {id:6, name: "Apex Legends", genre: "Battle Royale" },
-    {id:7, name: "Overwatch 2", genre: "Hero Shooter" },
-    {id:8, name: "Elden Ring", genre: "RPG" },
-    {id:9, name: "Rocket League", genre: "Sports" },
-    {id:10, name: "Dota 2", genre: "MOBA" },
+    { name: "Counter-Strike 2", genreName: "FPS" },
+    { name: "Minecraft",        genreName: "Sandbox" },
+    { name: "League of Legends",genreName: "MOBA" },
+    { name: "Stardew Valley",   genreName: "Simulation" },
+    { name: "Valorant",         genreName: "FPS" },
+    { name: "Apex Legends",     genreName: "Battle Royale" },
+    { name: "Overwatch 2",      genreName: "Hero Shooter" },
+    { name: "Elden Ring",       genreName: "RPG" },
+    { name: "Rocket League",    genreName: "Sports" },
+    { name: "Dota 2",           genreName: "MOBA" },
   ];
 
   const games = await Promise.all(
-    gamesData.map((game) => prisma.game.create({ data: game }))
+    gamesData.map(({ name, genreName }) =>
+      prisma.game.create({
+        data: {
+          name,
+          genres: { connect: { id: genreMap.get(genreName)! } },
+        },
+      })
+    )
   );
 
   // 3. Create Users

@@ -1,5 +1,6 @@
 'use client';
 import checkUser from '@/helpers/checkUser';
+import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 export interface Profile {
@@ -31,6 +32,9 @@ export default function Navbar() {
               </Link>
               <Link href="/playerListing" className="btn btn-outline-light rounded-pill px-4">
                 Find Players
+              </Link>
+              <Link href="/messages" className='btn btn-outline-light rounded-pill px-4'>
+                <MessageCircle />
               </Link>
             </div>
           ) 

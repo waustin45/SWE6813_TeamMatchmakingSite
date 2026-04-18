@@ -5,7 +5,9 @@ export async function getAllPlayers() {
     try{
         const players = await prisma.user.findMany({
             include: {
-                games: true,
+                games: {
+                    include: { genres: true }
+                },
                 tags: true
             },
             orderBy: {

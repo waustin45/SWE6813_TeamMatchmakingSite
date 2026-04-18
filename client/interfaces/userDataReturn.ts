@@ -1,6 +1,7 @@
 import UserDataInterface from "./userDataInterface";
 
-export default interface UserDataReturn{
-    success: boolean;
-    data: UserDataInterface;
-}
+type UserDataReturn =
+  | { success: true; data: UserDataInterface }
+  | { success: false; error: string; data: UserDataInterface | null };
+
+export default UserDataReturn;
